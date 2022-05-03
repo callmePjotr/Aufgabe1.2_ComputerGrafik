@@ -45,5 +45,8 @@ public:
 	afx_msg void OnRButtonUp(UINT nFlags, CPoint point);
 	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	afx_msg void OnDiagonaleMandelbrot();
+	afx_msg void OnVektorQuadrat();
+	afx_msg void OnVektorWuerfelrotieren();
+	afx_msg void OnVektorQuadratrotieren();
 };
 
