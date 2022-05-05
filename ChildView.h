@@ -23,6 +23,8 @@ public:
 	double xddelta;
 	double ydmin;
 	double yddelta;
+	int m_height;
+	int m_width;
 
 // Überschreibungen
 	protected:
@@ -48,5 +50,9 @@ public:
 	afx_msg void OnVektorQuadrat();
 	afx_msg void OnVektorWuerfelrotieren();
 	afx_msg void OnVektorQuadratrotieren();
+	void GLInit(int Breite, int Hoehe, int Modus);
+	void Bunter_Einheitswuerfel();
+	void Achsenkreuz(float l);
+	afx_msg void OnOpenglAufgabe5();
 };
 
