@@ -6,6 +6,11 @@
 #include "framework.h"
 #include "Aufgabe1.2_ComputerGrafik.h"
 #include "ChildView.h"
+#include "Vektor2.h"
+#include "time.h"
+#include <iostream>
+#include <cstdlib>
+
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -34,6 +39,10 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 
 	ON_WM_LBUTTONDOWN()
 	ON_COMMAND(ID_DIAGONALE_MANDELBROT, &CChildView::OnDiagonaleMandelbrot)
+	ON_COMMAND(ID_VEKTOR_QUADRAT, &CChildView::OnVektorQuadrat)
+
+	ON_COMMAND(ID_VEKTOR_WUERFELROTIEREN, &CChildView::OnVektorWuerfelrotieren)
+	ON_COMMAND(ID_VEKTOR_QUADRATROTIEREN, &CChildView::OnVektorQuadratrotieren)
 END_MESSAGE_MAP()
 
 
@@ -290,4 +299,126 @@ void CChildView::OnDiagonaleMandelbrot()
 	yddelta = 2.5;
 	choose = 1;
 	MandelbrotMalen();
+}
+
+
+
+
+void CChildView::OnVektorQuadrat()
+{
+	Vektor2 Quadrat[4];
+	Quadrat[0] = Vektor2(50, 50);
+	Quadrat[1] = Vektor2(150, 50);
+	Quadrat[2] = Vektor2(150, 150);
+	Quadrat[3] = Vektor2(50, 150);
+
+	CDC* pDC = GetDC();
+	CRect rect;
+	GetClientRect(&rect);
+
+
+	Matrix2 MT;
+	MT.setTrans(10, 0);
+	for (int anim = 0; anim < 50; anim++) {
+		pDC->FillSolidRect(rect, RGB(255, 255, 0));
+
+		for (int i = 0; i < 4; i++) {
+			Quadrat[i] = MT * Quadrat[i];
+		}
+		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+		for (int i = 0; i < 4; i++) {
+			pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+		}
+		Sleep(100);
+
+}
+
+}
+
+
+void CChildView::OnVektorWuerfelrotieren()
+{
+	Vektor3 wuerfel[8];
+	wuerfel[0] = Vektor3(50, 50, 50); 
+	wuerfel[1] = Vektor3(150, 50,50);
+	wuerfel[2] = Vektor3(150, 150,150);
+	wuerfel[3] = Vektor3(50, 150,50);
+	wuerfel[4] = Vektor3(50, 50,150);
+	wuerfel[5] = Vektor3(150, 50,150);
+	wuerfel[6] = Vektor3(150, 50, 150);
+	wuerfel[7] = Vektor3(50, 150,150);
+
+	CDC* pDC = GetDC();
+	CRect rect;
+	GetClientRect(&rect);
+
+	pDC->MoveTo(wuerfel[3].vek[0], wuerfel[3].vek[1]);
+	for (int i = 0; i < 4; i++) {
+		pDC->LineTo(wuerfel[i].vek[0], wuerfel[i].vek[1]);
+	}
+
+	//hinten
+
+	pDC->MoveTo(wuerfel[7].vek[0], wuerfel[7].vek[1]);
+	for (int i = 0; i < 8; i++) {
+		pDC->LineTo(wuerfel[i].vek[0], wuerfel[i].vek[1]);
+	}
+
+	for (int i = 0; i < 4; i++) {
+		pDC->MoveTo(wuerfel[i].vek[0], wuerfel[i].vek[1]);
+		pDC->LineTo(wuerfel[i+4].vek[0], wuerfel[i+4].vek[1]);
+	}
+
+}
+
+
+void CChildView::OnVektorQuadratrotieren()
+{
+	Vektor2 Quadrat[4];
+	Quadrat[0] = Vektor2(50, 50);
+	Quadrat[1] = Vektor2(150, 50);
+	Quadrat[2] = Vektor2(150, 150);
+	Quadrat[3] = Vektor2(50, 150);
+
+	CDC* pDC = GetDC();
+	CRect rect;
+	GetClientRect(&rect);
+
+	//Quadrat zeichnen
+	pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+	for (int i = 0; i < 4; i++) {
+		pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+	}
+
+	//Quadrat in den Ursprung verschieben
+	Matrix2 MT;
+	MT.setTrans(-100, -100);
+
+
+	//Quadrat rotieren
+	Matrix2 RotMat;
+	RotMat.setRotation(10);
+
+	
+	//Quadrat zurückschieben
+	Matrix2 TransMatr;
+	TransMatr.setTrans(100, 100);
+
+	for (int dreh = 0; dreh < 50; dreh++) {
+		for (int i = 0; i < 4; i++) {
+			Quadrat[i] = MT * Quadrat[i];
+			Quadrat[i] = RotMat * Quadrat[i];
+			Quadrat[i] = TransMatr * Quadrat[i];
+		}
+
+		pDC->MoveTo(Quadrat[3].vek[0], Quadrat[3].vek[1]);
+		for (int i = 0; i < 4; i++) {
+			pDC->LineTo(Quadrat[i].vek[0], Quadrat[i].vek[1]);
+		}
+
+		pDC->FillSolidRect(rect, RGB(255, 255, 255));
+
+		Sleep(100);
+	}
+	
 }
